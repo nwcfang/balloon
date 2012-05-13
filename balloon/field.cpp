@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "element.h"
+#include "glob.h"
 
 CElement* InitField( CElement **Elem, const int width, const int height )
 {
 	*Elem = new CElement;
-	if( Elem != NULL )
+	if( Elem == NULL )
 	{
-		fprintf(stderr, "Ошибка выделения памяти\n");
+		fprintf(stderr, "error alloc\n");
 		exit(2);
 	}
 	CElement *Tail = *Elem;
@@ -14,6 +15,7 @@ CElement* InitField( CElement **Elem, const int width, const int height )
 	CElement *HeadStr = *Elem;
 	int correctWidth = width - 1;
 
+	Tail->SetLevel();
 	for( int i = 0; i < height; ++ i )
 	{
 
@@ -23,7 +25,7 @@ CElement* InitField( CElement **Elem, const int width, const int height )
 			Tail->pRight = new CElement;
 			if( Tail->pRight == NULL )
 			{
-				fprintf(stderr, "Ошибка выделения памяти\n");
+				fprintf(stderr, "error alloc\n");
 				exit(2);
 			}
 
@@ -39,6 +41,7 @@ CElement* InitField( CElement **Elem, const int width, const int height )
 			
 			Tail->x = j + 1;
 			Tail->y = i;
+			Tail->SetLevel();
 			if( i == width - 2 )
 			{
 				if( PrevTail )
@@ -55,7 +58,7 @@ CElement* InitField( CElement **Elem, const int width, const int height )
 			HeadStr->pUp = new CElement;
 			if( HeadStr->pUp == NULL )
 			{
-				fprintf(stderr, "Ошибка выделения памяти\n");
+				fprintf(stderr, "error alloc\n");
 				exit(2);
 			}
 			HeadStr->pUp->pDown = HeadStr;
@@ -92,3 +95,18 @@ void ReleaseField( CElement *Elem, const int width, const int height )
 		Tail = HeadStrUp;
 	}
 }
+
+// Строит график высот 
+int Statistic(FILE *outlog, vector<int> *level )
+{
+	fprintf( outlog, "    ^\n");
+	for( int i = VALUE - 1; i >= 0; -- i )
+	{
+		fprintf( outlog, "%4i|\n", i * 200);
+	}
+	return 0;
+}
+
+
+
+

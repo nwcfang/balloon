@@ -1,13 +1,11 @@
-﻿Построение начато 11.05.2012 16:19:04.
+﻿Построение начато 13.05.2012 16:52:41.
      1>Проект "C:\development\balloon\balloon\balloon.vcxproj" в узле 2 (целевые объекты build).
      1>InitializeBuildStatus:
          Создание "Debug\balloon.unsuccessfulbuild", так как было задано "AlwaysCreate".
        ClCompile:
          Для всех выходных данных обновления не требуется.
-         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\balloon.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt balloon.cpp
-         balloon.cpp
-     1>c:\development\balloon\balloon\balloon.cpp(20): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _getch. See online help for details.
-                 c:\program files\microsoft visual studio 10.0\vc\include\conio.h(128): см. объявление "getch"
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\balloon.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt field.cpp
+         field.cpp
        ManifestResourceCompile:
          Для всех выходных данных обновления не требуется.
        Link:
@@ -29,4 +27,4 @@
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:01.23
+Затраченное время: 00:00:00.42
