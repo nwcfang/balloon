@@ -12,8 +12,9 @@
 
 int main()
 {
-	FILE *log;
-	vector<int> vStat; // вектор содержит статистику высот, на которые поднимался шар
+	FILE *log;			// лог-файл
+	CField Field;		// содержит статическую базу и остальные данные
+
 	log = fopen( "log.txt", "w" );
 	if( log == NULL )
 	{
@@ -21,17 +22,12 @@ int main()
 		exit(2);
 	}
 
-	CElement *Head = NULL;
-	CElement *Tail = NULL;
-
-	Tail = InitField( &Head, WIDTH, HEIGHT ); // создание статической базы
-	InitConditions();
-
-	Statistic( log, &vStat ); // статистика
+	Field.InitField( WIDTH, HEIGHT );
+	Field.Statistic( log ); // статистика
 
 	fclose( log );
-	ReleaseField( Head, WIDTH, HEIGHT );
-	vStat.clear();
+	Field.ReleaseField( WIDTH, HEIGHT );
+
 	return 0;
 }
 

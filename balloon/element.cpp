@@ -29,7 +29,7 @@ int CElement::SetLevel()
 		iValD = Lvl.direction[i] + (rand() % 3 - 1 );
 		if( iValD == -1 )
 			iValD = 7;
-		if( iValV == 8 )
+		if( iValD == 8 )
 			iValD = 0;
 	}
 	return 0;
