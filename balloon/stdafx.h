@@ -8,12 +8,10 @@
 #include "targetver.h"
 #include <ctime>
 #include <stdio.h>
-//#include <stdlib.h>
 #include <vector>
 #include <errno.h>
+#include <iostream>
+
 using namespace std;
-//#include <tchar.h>
-
-
 
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы

@@ -12,3 +12,7 @@
 *.lai
 *.la
 *.a
+
+# Compiled Debug
+/balloon/Debug/*
+/ipch/*

@@ -13,6 +13,7 @@
 int main()
 {
 	FILE *log;
+	vector<int> vStat; // вектор содержит статистику высот, на которые поднимался шар
 	log = fopen( "log.txt", "w" );
 	if( log == NULL )
 	{
@@ -23,12 +24,14 @@ int main()
 	CElement *Head = NULL;
 	CElement *Tail = NULL;
 
-	Tail = InitField( &Head, WIDTH, HEIGHT );
-	vector<int> a;
-	Statistic( log, &a ); 
+	Tail = InitField( &Head, WIDTH, HEIGHT ); // создание статической базы
+	InitConditions();
+
+	Statistic( log, &vStat ); // статистика
 
 	fclose( log );
 	ReleaseField( Head, WIDTH, HEIGHT );
+	vStat.clear();
 	return 0;
 }
 
