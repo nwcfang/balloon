@@ -25,6 +25,15 @@ private:
 	CElement* GetPoint( int x, int y );
 	// движение по короткому пути
 	int ShortWay();
+	// поиск нужного направления ветра
+	int SearchDirect(CElement *Point, int direction);
+	// поиск приближенного к нужному
+	//int SecondSearchDirect();
+	// корректировка направления 
+	int Correction(int *dr);
+	//
+	int MoveObj( int dr );
+
 
 
 public:

@@ -23,7 +23,14 @@ int main()
 	}
 
 	Field.InitField( WIDTH, HEIGHT );
-	Field.StartMove( 0 );
+
+	if( Field.StartMove( 0 ) == 1 )
+	{
+		printf( "Error: StartMove\n" );
+		Field.ReleaseField( WIDTH, HEIGHT );
+		exit(2);
+	}
+
 	Field.Statistic( log ); // статистика
 
 	fclose( log );

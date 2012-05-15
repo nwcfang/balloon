@@ -159,6 +159,7 @@ int CField::InitConditions()
 
 int CField::StartMove( int variant )
 {
+	int res = 0;
 	if( Head == NULL )
 	{
 		fprintf(stderr, "Field is not inited\n");
@@ -167,8 +168,10 @@ int CField::StartMove( int variant )
 	currentX = startX;
 	currentY = startY;
 	if( variant == 0 )
-		ShortWay();
-
+	{
+		if( ShortWay() == 1)
+			return 1;
+	}
 
 	return 0;
 }
@@ -197,9 +200,7 @@ int CField::ShortWay()
 	bool flag = true;
 	int direction = 0;
 	int nextLevel = 0;
-	int index = 0;
-	int plus = 1;
- 	//Point = GetPoint( currentX, currentY );
+
 	while( flag )
 	{
 		if( currentX == endX && currentY < endY )
@@ -221,25 +222,79 @@ int CField::ShortWay()
 		else
 			flag = false; // аэростат в точке назначения
 
-		nextLevel = 0;
-		index = 0;
-		plus = 1;
-		for( int i = currentLevel; i < Point->Lvl.volume.size(); ++ i, plus * (-1) )
+		nextLevel = SearchDirect( Point, direction );
+
+		if( nextLevel == -1 )
 		{
-			index = plus * i; 
-			if( direction == Point->Lvl.direction[index] && index >= 0 )
-			{
-				nextLevel = Point->Lvl.volume[index];
-				break;
-			}
+			direction = direction + 1;
+			Correction( &direction );
+
+			nextLevel = SearchDirect( Point, direction );
+		}
+
+		if( nextLevel == -1 )
+		{
+			direction = direction - 1;
+			Correction( &direction );
+
+			direction = direction - 1;
+			Correction( &direction );
+
+			nextLevel = SearchDirect( Point, direction );
+		}
+
+		if( nextLevel == -1 )
+		{
+			printf( "Error: no pass\n" );
+			return 1;
 		}
 
 		if( nextLevel > currentLevel )
 			ammo = ammo - (currentLevel - nextLevel);
 		if( nextLevel < currentLevel )
 			helium = helium - (nextLevel - currentLevel);
+		level.push_back( currentLevel * 200 );
+
+
+
+
 
 
 	}
+	return 0;
+}
+ 
+int CField::SearchDirect(CElement *Point, int direction)
+{
+	int nextLevel = -1;
+	int plus = 1;
+	int index = 0;
+	for( int i = currentLevel; i < Point->Lvl.volume.size(); ++ i, plus *= (-1) )
+	{
+		index += plus * i;
+		if( index >= 0 )
+		{
+			if( direction == Point->Lvl.direction[index] )
+			{
+				nextLevel = Point->Lvl.volume[index];
+				break;
+			}
+		}
+	}
+	return nextLevel;
+}
+
+int CField::Correction(int *dr)
+{
+	if( *dr == 8 )
+		*dr = 0;
+	if( *dr == -1 )
+		*dr = 7;
+	return 0; 
+}
+
+int CField::MoveObj( int dr )
+{
+
 	return 0;
 }

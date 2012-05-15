@@ -23,7 +23,8 @@ int CElement::SetLevel()
 	int iValD = rand() % 8;
 	for( int i = 0; i < VALUE; ++ i )
 	{
-		iValV = i * STAP;
+		//iValV = i * STAP;
+		iValV = i;
 		Lvl.direction.push_back( iValD );
 		Lvl.volume.push_back( iValV );
 		iValD = Lvl.direction[i] + (rand() % 3 - 1 );
