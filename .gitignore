@@ -4,6 +4,7 @@
 *.o
 *.obj
 *.tlog
+*.opensdf
 
 # Compiled Dynamic libraries
 *.so

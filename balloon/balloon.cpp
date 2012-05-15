@@ -23,6 +23,7 @@ int main()
 	}
 
 	Field.InitField( WIDTH, HEIGHT );
+	Field.StartMove( 0 );
 	Field.Statistic( log ); // статистика
 
 	fclose( log );

@@ -7,11 +7,13 @@
 CField::CField()
 {
 	Head = NULL;
+	Tail = NULL;
 	startX = 0;
 	startY = 0;
 	endX = 0;
 	endY = 0;
 	ammo = 0;
+	helium = 0;
 	currentLevel = 0; 
 	currentAmmo = 0;
 	currentX = 0;
@@ -150,6 +152,94 @@ int CField::InitConditions()
 	cin >> endY;
 	cout << "Enter number of load:";
 	cin >> ammo;
+	helium = ammo;
 
+	return 0;
+}
+
+int CField::StartMove( int variant )
+{
+	if( Head == NULL )
+	{
+		fprintf(stderr, "Field is not inited\n");
+		exit(2);
+	}
+	currentX = startX;
+	currentY = startY;
+	if( variant == 0 )
+		ShortWay();
+
+
+	return 0;
+}
+
+CElement* CField::GetPoint( int x, int y )
+{
+	Tail = Head;
+	while( x != 0 )
+	{
+		Tail = Tail->pRight;
+		-- x;
+	}
+
+	while( y != 0 )
+	{
+		Tail = Tail->pUp;
+		-- y;
+	}
+
+	return Tail;
+}
+
+int CField::ShortWay()
+{
+	CElement *Point = GetPoint( currentX, currentY );
+	bool flag = true;
+	int direction = 0;
+	int nextLevel = 0;
+	int index = 0;
+	int plus = 1;
+ 	//Point = GetPoint( currentX, currentY );
+	while( flag )
+	{
+		if( currentX == endX && currentY < endY )
+			direction = 0;	// север
+		else if( currentX < endX && currentY < endY )
+			direction = 1; // северо-восток
+		else if( currentX < endX && currentY == endY )
+			direction = 2; // восток
+		else if( currentX < endX && currentY > endY )
+			direction = 3; // юго-восток
+		else if( currentX == endX && currentY > endY )
+			direction = 4; // юг
+		else if( currentX > endX && currentY > endY )
+			direction = 5; // юго-запад
+		else if( currentX > endX && currentY == endY )
+			direction = 6; // запад
+		else if( currentX > endX && currentY < endY )
+			direction = 7; // северо-запад
+		else
+			flag = false; // аэростат в точке назначения
+
+		nextLevel = 0;
+		index = 0;
+		plus = 1;
+		for( int i = currentLevel; i < Point->Lvl.volume.size(); ++ i, plus * (-1) )
+		{
+			index = plus * i; 
+			if( direction == Point->Lvl.direction[index] && index >= 0 )
+			{
+				nextLevel = Point->Lvl.volume[index];
+				break;
+			}
+		}
+
+		if( nextLevel > currentLevel )
+			ammo = ammo - (currentLevel - nextLevel);
+		if( nextLevel < currentLevel )
+			helium = helium - (nextLevel - currentLevel);
+
+
+	}
 	return 0;
 }
