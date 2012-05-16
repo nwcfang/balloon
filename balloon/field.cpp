@@ -220,7 +220,8 @@ int CField::ShortWay()
 		else if( currentX > endX && currentY < endY )
 			direction = 7; // северо-запад
 		else
-			flag = false; // аэростат в точке назначения
+			break;
+			//flag = false; // аэростат в точке назначения
 
 		nextLevel = SearchDirect( Point, direction );
 
@@ -251,9 +252,15 @@ int CField::ShortWay()
 
 		if( nextLevel > currentLevel )
 			ammo = ammo - (currentLevel - nextLevel);
+			
 		if( nextLevel < currentLevel )
 			helium = helium - (nextLevel - currentLevel);
+		currentLevel = nextLevel;
 		level.push_back( currentLevel * 200 );
+		currentX = Point->x;
+		currentY = Point->y;
+		MoveObj( &Point, direction );
+
 
 
 
@@ -293,8 +300,48 @@ int CField::Correction(int *dr)
 	return 0; 
 }
 
-int CField::MoveObj( int dr )
+int CField::MoveObj( CElement **Point, int dr )
 {
-
-	return 0;
+	// отклонение от статической базы
+	//dr = dr + (rand() % 3 - 1 );
+	Correction( &dr );
+	if( dr == 0 )
+	{
+		*Point = (*Point)->pUp;
+	}
+	else if( dr == 1 )
+	{
+		*Point = (*Point)->pUp;
+		*Point = (*Point)->pRight;
+	}
+	else if( dr == 2 )
+	{
+		*Point = (*Point)->pRight;
+	}
+	else if( dr == 3 )
+	{
+		*Point = (*Point)->pRight;
+		*Point = (*Point)->pDown;
+	}
+	else if( dr == 4 )
+	{
+		*Point = (*Point)->pDown;
+	}
+	else if( dr == 5 )
+	{
+		*Point = (*Point)->pDown;
+		*Point = (*Point)->pLeft;
+	}
+	else if( dr == 6 )
+	{
+		*Point = (*Point)->pLeft;
+	}
+	else if( dr == 7 )
+	{
+		*Point = (*Point)->pLeft;
+		*Point = (*Point)->pUp;
+	}
+	else
+		return -1;
+	return dr;
 }

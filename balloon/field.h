@@ -32,7 +32,7 @@ private:
 	// корректировка направления 
 	int Correction(int *dr);
 	//
-	int MoveObj( int dr );
+	int MoveObj( CElement **Point, int dr );
 
 
 
