@@ -24,7 +24,7 @@ private:
 	// возвращает указательна точку поля
 	CElement* GetPoint( int x, int y );
 	// движение по короткому пути
-	int ShortWay();
+	int ShortWay( FILE* outlog2 );
 	// поиск нужного направления ветра
 	int SearchDirect(CElement *Point, int direction);
 	// поиск приближенного к нужному
@@ -45,7 +45,7 @@ public:
 	// статистика высот, на каторые поднимался аэростат
 	int Statistic(FILE *outlog );
 	// начать отработку маршрута
-	int StartMove( int variant );
+	int StartMove( int variant, FILE* outlog2 );
 
 	
 };

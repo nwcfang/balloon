@@ -83,6 +83,7 @@ CElement* CField::InitField( const int width, const int height )
 			HeadStr = HeadStr->pUp;
 			HeadStr->y = i + 1;
 			Tail = HeadStr;
+			Tail->SetLevel();
 		}
 	}
 
@@ -122,6 +123,10 @@ int CField::Statistic(FILE *outlog )
 			{
 				fprintf( outlog, "  *" );
 			}
+			else
+			{
+				fprintf( outlog, "   " );
+			}
 			
 		}
 		fprintf( outlog, "\n" );
@@ -157,7 +162,7 @@ int CField::InitConditions()
 	return 0;
 }
 
-int CField::StartMove( int variant )
+int CField::StartMove( int variant, FILE* outlog2 )
 {
 	int res = 0;
 	if( Head == NULL )
@@ -169,7 +174,7 @@ int CField::StartMove( int variant )
 	currentY = startY;
 	if( variant == 0 )
 	{
-		if( ShortWay() == 1)
+		if( ShortWay( outlog2) == 1)
 			return 1;
 	}
 
@@ -194,12 +199,15 @@ CElement* CField::GetPoint( int x, int y )
 	return Tail;
 }
 
-int CField::ShortWay()
+int CField::ShortWay( FILE* outlog2 )
 {
 	CElement *Point = GetPoint( currentX, currentY );
 	bool flag = true;
 	int direction = 0;
 	int nextLevel = 0;
+	fprintf( outlog2, "Start coord: %i %i\n", currentX, currentY ); 
+	fprintf( outlog2, "End coord:  %i %i\n", endX, endY );
+	fprintf( outlog2, "Ammo/Helium:  %i/%i\n", ammo, helium );
 
 	while( flag )
 	{
@@ -222,7 +230,7 @@ int CField::ShortWay()
 		else
 			break;
 			//flag = false; // аэростат в точке назначения
-
+		fprintf( outlog2, "STATDIR: %i ", direction );
 		nextLevel = SearchDirect( Point, direction );
 
 		if( nextLevel == -1 )
@@ -246,20 +254,53 @@ int CField::ShortWay()
 
 		if( nextLevel == -1 )
 		{
+			direction = direction + 1;
+			Correction( &direction );
+
+			direction = direction + 1;
+			Correction( &direction );
+
+			direction = direction + 1;
+			Correction( &direction );
+
+			nextLevel = SearchDirect( Point, direction );
+		}
+			if( nextLevel == -1 )
+		{
+			direction = direction - 1;
+			Correction( &direction );
+
+			direction = direction - 1;
+			Correction( &direction );
+
+			direction = direction - 1;
+			Correction( &direction );
+
+			direction = direction - 1;
+			Correction( &direction );
+
+			nextLevel = SearchDirect( Point, direction );
+		}
+
+		if( nextLevel == -1 )
+		{
 			printf( "Error: no pass\n" );
 			return 1;
 		}
 
 		if( nextLevel > currentLevel )
-			ammo = ammo - (currentLevel - nextLevel);
+			ammo = ammo - (nextLevel - currentLevel );
 			
 		if( nextLevel < currentLevel )
-			helium = helium - (nextLevel - currentLevel);
+			helium = helium - (currentLevel - nextLevel );
 		currentLevel = nextLevel;
 		level.push_back( currentLevel * 200 );
+
+		MoveObj( &Point, direction );
 		currentX = Point->x;
 		currentY = Point->y;
-		MoveObj( &Point, direction );
+		fprintf( outlog2, "DIR:%i X:%i Y:%i H:%i AM:%i HEL:%i\n", direction, currentX,
+			currentY, currentLevel, ammo, helium );
 
 
 
@@ -268,6 +309,7 @@ int CField::ShortWay()
 
 
 	}
+	//fprintf(outlog2, )
 	return 0;
 }
  
@@ -275,11 +317,14 @@ int CField::SearchDirect(CElement *Point, int direction)
 {
 	int nextLevel = -1;
 	int plus = 1;
-	int index = 0;
-	for( int i = currentLevel; i < Point->Lvl.volume.size(); ++ i, plus *= (-1) )
+	int index = currentLevel;
+	int size = Point->Lvl.volume.size();
+	int count = Point->Lvl.volume.size() * 2;
+	for( int i = 0; i < count; ++ i, plus *= (-1) )
 	{
 		index += plus * i;
-		if( index >= 0 )
+		
+		if( index >= 0 && index < size )
 		{
 			if( direction == Point->Lvl.direction[index] )
 			{
@@ -295,8 +340,10 @@ int CField::Correction(int *dr)
 {
 	if( *dr == 8 )
 		*dr = 0;
+
 	if( *dr == -1 )
 		*dr = 7;
+
 	return 0; 
 }
 
@@ -307,39 +354,55 @@ int CField::MoveObj( CElement **Point, int dr )
 	Correction( &dr );
 	if( dr == 0 )
 	{
-		*Point = (*Point)->pUp;
+		if( (*Point)->pUp != NULL )
+			*Point = (*Point)->pUp;
 	}
 	else if( dr == 1 )
 	{
-		*Point = (*Point)->pUp;
-		*Point = (*Point)->pRight;
+		if( (*Point)->pUp != NULL && (*Point)->pRight != NULL )
+		{
+			*Point = (*Point)->pUp;
+			*Point = (*Point)->pRight;
+		}
 	}
 	else if( dr == 2 )
 	{
-		*Point = (*Point)->pRight;
+		if( (*Point)->pRight != NULL )
+			*Point = (*Point)->pRight;
 	}
 	else if( dr == 3 )
-	{
-		*Point = (*Point)->pRight;
-		*Point = (*Point)->pDown;
+	{ 
+		if( (*Point)->pRight != NULL && (*Point)->pDown != NULL )
+		{
+			*Point = (*Point)->pRight;
+			*Point = (*Point)->pDown;
+		}
 	}
 	else if( dr == 4 )
 	{
-		*Point = (*Point)->pDown;
+		if( (*Point)->pDown != NULL )
+			*Point = (*Point)->pDown;
 	}
 	else if( dr == 5 )
 	{
-		*Point = (*Point)->pDown;
-		*Point = (*Point)->pLeft;
+		if( (*Point)->pDown != NULL && (*Point)->pLeft != NULL )
+		{
+			*Point = (*Point)->pDown;
+			*Point = (*Point)->pLeft;
+		}
 	}
 	else if( dr == 6 )
 	{
-		*Point = (*Point)->pLeft;
+		if( (*Point)->pLeft != NULL )
+			*Point = (*Point)->pLeft;
 	}
 	else if( dr == 7 )
 	{
-		*Point = (*Point)->pLeft;
-		*Point = (*Point)->pUp;
+		if( (*Point)->pLeft != NULL && (*Point)->pUp != NULL )
+		{
+			*Point = (*Point)->pLeft;
+			*Point = (*Point)->pUp;
+		}
 	}
 	else
 		return -1;

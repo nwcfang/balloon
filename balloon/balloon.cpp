@@ -7,12 +7,14 @@
 #include "field.h"
 
 
-#define WIDTH 3
-#define HEIGHT 3
+#define WIDTH 50
+#define HEIGHT 50
 
 int main()
 {
-	FILE *log;			// лог-файл
+	srand(time(0));
+	FILE *log;			// лог-файлы
+	FILE *log2;
 	CField Field;		// содержит статическую базу и остальные данные
 
 	log = fopen( "log.txt", "w" );
@@ -21,10 +23,16 @@ int main()
 		fprintf(stderr, "failed open file\n");
 		exit(2);
 	}
+	log2 = fopen( "log2.txt", "w" );
+	if( log2 == NULL )
+	{
+		fprintf(stderr, "failed open file\n");
+		exit(2);
+	}
 
 	Field.InitField( WIDTH, HEIGHT );
 
-	if( Field.StartMove( 0 ) == 1 )
+	if( Field.StartMove( 0, log2 ) == 1 )
 	{
 		printf( "Error: StartMove\n" );
 		Field.ReleaseField( WIDTH, HEIGHT );
@@ -34,6 +42,7 @@ int main()
 	Field.Statistic( log ); // статистика
 
 	fclose( log );
+	fclose( log2 );
 	Field.ReleaseField( WIDTH, HEIGHT );
 
 	return 0;
